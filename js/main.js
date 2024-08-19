@@ -46,7 +46,11 @@ function create() {
         lines.strokePath();
     }
 
-    characters.push(new Monster(this, "pikachu", 100, 10, 10, 3, 0, 0, 'pikachu'));
+    characters.push(new Trainer(this, "satoshi", 100, 10, 10, 3, 0, GRID_SIZE - 1, 'satoshi'));
+    characters.push(new Monster(this, "pikachu", 100, 10, 10, 3, 1, GRID_SIZE - 2, 'pikachu'));
+
+    characters.push(new Trainer(this, "shigeru", 100, 10, 10, 3, GRID_SIZE - 1, 0, 'shigeru'));
+    characters.push(new Monster(this, "eevee", 100, 10, 10, 3, GRID_SIZE - 2, 1, 'eevee'));
 
     //画面クリック時の処理
     this.input.on('pointerdown', function(pointer) {
