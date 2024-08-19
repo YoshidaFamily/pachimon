@@ -1,7 +1,11 @@
+import { GRID_SIZE, CELL_SIZE } from './constants.js';
+import { Trainer } from './Trainer.js';
+import { Monster } from './Monster.js';
+
 let config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 800,
+    width: 600,
+    height: 600,
     scene: {
         preload: preload,
         create: create,
@@ -9,10 +13,6 @@ let config = {
     }
 };
 
-const GRID_SIZE = 10; // グリッドのサイズ（10x10）
-const CELL_SIZE = config.width / GRID_SIZE; // セルのサイズ
-
-let score = 0;
 let characters = [];
 let selectedCharacter = null;
 
@@ -46,49 +46,35 @@ function create() {
         lines.strokePath();
     }
 
-    let character = this.add.image(CELL_SIZE / 2, CELL_SIZE / 2, 'pikachu');
-    character.row = 0;
-    character.col = 0;
-    character.move = 3;
-    character.setScale(0.1);
-    characters.push(character);
+    characters.push(new Monster(this, "pikachu", 100, 10, 10, 3, 0, 0, 'pikachu'));
 
     //画面クリック時の処理
     this.input.on('pointerdown', function(pointer) {
-        let row = Math.min(Math.floor(pointer.x / CELL_SIZE), GRID_SIZE - 1);
-        let col = Math.min(Math.floor(pointer.y / CELL_SIZE), GRID_SIZE - 1);
-        console.log(row, col);
+        let x = Math.min(Math.floor(pointer.x / CELL_SIZE), GRID_SIZE - 1);
+        let y = Math.min(Math.floor(pointer.y / CELL_SIZE), GRID_SIZE - 1);
+        console.log(x, y);
 
         if (selectedCharacter !== null) {
-            if (Math.abs(selectedCharacter.row - row) + Math.abs(selectedCharacter.col - col) <= selectedCharacter.move) {
+            if (Math.abs(selectedCharacter.x - x) + Math.abs(selectedCharacter.y - y) <= selectedCharacter.speed) {
                 graphics.clear();
+                selectedCharacter.move(x, y);
                 selectedCharacter = null;
-
-                character.row = row;
-                character.col = col;
-                this.tweens.add({
-                    targets: character,
-                    x: character.row * CELL_SIZE + CELL_SIZE / 2,
-                    y: character.col * CELL_SIZE + CELL_SIZE / 2,
-                    duration: 300,
-                    ease: 'Linear'
-                });
             }
 
         } else {
             // キャラクターの選択判定
             graphics.clear();
             for (const character of characters) {
-                if (row === character.row && col === character.col) {
+                if (x === character.x && y === character.y) {
                     console.log("Character selected");
                     selectedCharacter = character;
 
                     // 移動範囲のハイライト
-                    for (let dx = -character.move; dx <= character.move; dx++) {
-                        for (let dy = -character.move; dy <= character.move; dy++) {
-                            if (Math.abs(dx) + Math.abs(dy) <= character.move) {
-                                const highlightX = (character.row + dx) * CELL_SIZE;
-                                const highlightY = (character.col + dy) * CELL_SIZE;
+                    for (let dx = -character.speed; dx <= character.speed; dx++) {
+                        for (let dy = -character.speed; dy <= character.speed; dy++) {
+                            if (Math.abs(dx) + Math.abs(dy) <= character.speed) {
+                                const highlightX = (character.x + dx) * CELL_SIZE;
+                                const highlightY = (character.y + dy) * CELL_SIZE;
                                 graphics.fillStyle(0x0000ff, 0.5);
                                 graphics.fillRect(highlightX, highlightY, CELL_SIZE, CELL_SIZE);
                             }
