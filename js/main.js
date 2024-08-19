@@ -22,7 +22,10 @@ let graphics = null;
 function preload() {
     graphics = this.add.graphics();
 
+    this.load.image('satoshi', './assets/satoshi.png');
+    this.load.image('shigeru', './assets/shigeru.png');
     this.load.image('pikachu', './assets/pikachu.png');
+    this.load.image('eevee', './assets/eevee.png');
 }
 
 function create() {
