@@ -60,6 +60,12 @@ function create() {
 
         if (selectedCharacter !== null) {
             if (Math.abs(selectedCharacter.x - x) + Math.abs(selectedCharacter.y - y) <= selectedCharacter.speed) {
+                for (const character of characters) {
+                    if (x === character.x && y === character.y) {
+                        console.log("Another character already exists at this location");
+                        return;
+                    }
+                }
                 graphics.clear();
                 selectedCharacter.move(x, y);
                 selectedCharacter = null;
