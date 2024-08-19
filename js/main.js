@@ -5,7 +5,7 @@ import { Monster } from './Monster.js';
 let config = {
     type: Phaser.AUTO,
     width: 600,
-    height: 600,
+    height: 800,
     scene: {
         preload: preload,
         create: create,
@@ -33,16 +33,16 @@ function create() {
 
     const lines = this.add.graphics();
     lines.lineStyle(10, 0xff0000, 1); // 線の太さ、色、透明度
-    for (let x = 0; x <= config.width; x += CELL_SIZE) {
+    for (let x = 0; x <= GRID_SIZE; x++) {
         lines.beginPath();
-        lines.moveTo(x, 0);
-        lines.lineTo(x, config.height);
+        lines.moveTo(x * CELL_SIZE , 0);
+        lines.lineTo(x * CELL_SIZE, GRID_SIZE * CELL_SIZE);
         lines.strokePath();
     }
-    for (let y = 0; y <= config.height; y += CELL_SIZE) {
+    for (let y = 0; y <= GRID_SIZE; y++) {
         lines.beginPath();
-        lines.moveTo(0, y);
-        lines.lineTo(config.width, y);
+        lines.moveTo(0, y * CELL_SIZE);
+        lines.lineTo(GRID_SIZE * CELL_SIZE, y * CELL_SIZE);
         lines.strokePath();
     }
 
@@ -51,6 +51,12 @@ function create() {
 
     characters.push(new Trainer(this, "shigeru", 100, 10, 10, 3, GRID_SIZE - 1, 0, 'shigeru'));
     characters.push(new Monster(this, "eevee", 100, 10, 10, 3, GRID_SIZE - 2, 1, 'eevee'));
+
+    // ステータス表示
+    for (let i = 0; i < characters.length; i++) {
+        const character = characters[i];
+        this.add.text(10, 630 + i * 20, `${character.name} HP: ${character.hp} STR: ${character.strength} DEF: ${character.defense} SPD: ${character.speed}`, {color: 'black'});
+    }
 
     //画面クリック時の処理
     this.input.on('pointerdown', function(pointer) {
@@ -82,9 +88,11 @@ function create() {
                     // 移動範囲のハイライト
                     for (let dx = -character.speed; dx <= character.speed; dx++) {
                         for (let dy = -character.speed; dy <= character.speed; dy++) {
-                            if (Math.abs(dx) + Math.abs(dy) <= character.speed) {
-                                const highlightX = (character.x + dx) * CELL_SIZE;
-                                const highlightY = (character.y + dy) * CELL_SIZE;
+                            let near_x = character.x + dx;
+                            let near_y = character.y + dy;
+                            if (0 <= near_x && near_x < GRID_SIZE && 0 <= near_y && near_y < GRID_SIZE && Math.abs(dx) + Math.abs(dy) <= character.speed) {
+                                const highlightX = near_x * CELL_SIZE;
+                                const highlightY = near_y * CELL_SIZE;
                                 graphics.fillStyle(0x0000ff, 0.5);
                                 graphics.fillRect(highlightX, highlightY, CELL_SIZE, CELL_SIZE);
                             }
