@@ -11,7 +11,7 @@ export class Character {
         this.x = x;
         this.y = y;
 
-        this.sprite = scene.add.sprite((0.5 + x) * CELL_SIZE, (0.5 + x) * CELL_SIZE, texture);
+        this.sprite = scene.add.sprite((0.5 + x) * CELL_SIZE, (0.5 + y) * CELL_SIZE, texture);
         this.sprite.setDisplaySize(CELL_SIZE - 10, CELL_SIZE - 10);
     }
 
