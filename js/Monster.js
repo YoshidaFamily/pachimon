@@ -5,6 +5,10 @@ export class Monster extends Character {
         super(scene, name, hp, strength, defense, speed, x, y, texture);
     }
 
-    attack() {
+    attack(skill, enemy) {
+        damage = enemy.defence - skill.power + this.strength;
+        if (damage > 0) {
+            enemy.hp = enemy.hp - damage;
+        }
     }
 }
