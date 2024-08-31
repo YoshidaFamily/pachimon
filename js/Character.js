@@ -26,4 +26,14 @@ export class Character {
             ease: 'Linear'
         });
     }
+
+    openActionWindow() {
+        console.log("アクション選択")
+    }
+
+    action(actId) {
+        if (actId === 0) {
+
+        }
+    }
 }

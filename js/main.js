@@ -35,7 +35,7 @@ function create() {
     lines.lineStyle(10, 0xff0000, 1); // 線の太さ、色、透明度
     for (let x = 0; x <= GRID_SIZE; x++) {
         lines.beginPath();
-        lines.moveTo(x * CELL_SIZE , 0);
+        lines.moveTo(x * CELL_SIZE, 0);
         lines.lineTo(x * CELL_SIZE, GRID_SIZE * CELL_SIZE);
         lines.strokePath();
     }
@@ -55,16 +55,23 @@ function create() {
     // ステータス表示
     for (let i = 0; i < characters.length; i++) {
         const character = characters[i];
-        this.add.text(10, 630 + i * 20, `${character.name} HP: ${character.hp} STR: ${character.strength} DEF: ${character.defense} SPD: ${character.speed}`, {color: 'black'});
+        this.add.text(10, 630 + i * 20, `${character.name} HP: ${character.hp} STR: ${character.strength} DEF: ${character.defense} SPD: ${character.speed}`, { color: 'black' });
     }
 
     //画面クリック時の処理
-    this.input.on('pointerdown', function(pointer) {
+    this.input.on('pointerdown', function (pointer) {
         let x = Math.min(Math.floor(pointer.x / CELL_SIZE), GRID_SIZE - 1);
         let y = Math.min(Math.floor(pointer.y / CELL_SIZE), GRID_SIZE - 1);
         console.log(x, y);
 
         if (selectedCharacter !== null) {
+            if (x === selectedCharacter.x && y === selectedCharacter.y) {
+                // アクションウィンドウ
+                selectedCharacter.openActionWindow()
+                graphics.clear();
+                selectedCharacter = null;
+                return;
+            }
             if (Math.abs(selectedCharacter.x - x) + Math.abs(selectedCharacter.y - y) <= selectedCharacter.speed) {
                 for (const character of characters) {
                     if (x === character.x && y === character.y) {
@@ -104,4 +111,4 @@ function create() {
     }, this);
 }
 
-function update() {}
+function update() { }
