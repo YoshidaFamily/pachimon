@@ -18,6 +18,7 @@ let selectedCharacter = null;
 
 let game = new Phaser.Game(config);
 let graphics = null;
+let statusTexts = [];
 
 function preload() {
     graphics = this.add.graphics();
@@ -46,17 +47,11 @@ function create() {
         lines.strokePath();
     }
 
-    characters.push(new Trainer(this, "satoshi", 100, 10, 10, 3, 0, GRID_SIZE - 1, 'satoshi'));
-    characters.push(new Monster(this, "pikachu", 100, 10, 10, 3, 1, GRID_SIZE - 2, 'pikachu'));
+    characters.push(new Trainer(this, "satoshi", 0, GRID_SIZE - 1, 'satoshi'));
+    characters.push(new Monster(this, "pikachu", 1, GRID_SIZE - 2, 'pikachu'));
 
-    characters.push(new Trainer(this, "shigeru", 100, 10, 10, 3, GRID_SIZE - 1, 0, 'shigeru'));
-    characters.push(new Monster(this, "eevee", 100, 10, 10, 3, GRID_SIZE - 2, 1, 'eevee'));
-
-    // ステータス表示
-    for (let i = 0; i < characters.length; i++) {
-        const character = characters[i];
-        this.add.text(10, 630 + i * 20, `${character.name} HP: ${character.hp} STR: ${character.strength} DEF: ${character.defense} SPD: ${character.speed}`, {color: 'black'});
-    }
+    characters.push(new Trainer(this, "shigeru", GRID_SIZE - 1, 0, 'shigeru'));
+    characters.push(new Monster(this, "eevee", GRID_SIZE - 2, 1, 'eevee'));
 
     //画面クリック時の処理
     this.input.on('pointerdown', function(pointer) {
@@ -104,4 +99,11 @@ function create() {
     }, this);
 }
 
-function update() {}
+function update() {
+    // ステータス表示
+    statusTexts.forEach(text => text.destroy());
+    for (let i = 0; i < characters.length; i++) {
+        const character = characters[i];
+        statusTexts.push(this.add.text(10, 630 + i * 20, `${character.name} HP: ${character.hp} STR: ${character.strength} DEF: ${character.defense} SPD: ${character.speed}`, {color: 'black'}));
+    }
+}
